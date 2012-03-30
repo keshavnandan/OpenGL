@@ -1,0 +1,335 @@
+#include <iostream>
+#include <stdlib.h>
+#include <math.h>
+#include <GL/glut.h>
+
+using namespace std;
+
+int n,x[20],y[20],tx,ty,theta,sx,sy,shx,shy,rx,ry,rtheta,q;
+
+void drawaxis(void)
+{
+    glBegin(GL_LINES);
+    glVertex3f(0.0f, 10.0f, -5.0f); // origin of the line
+    glVertex3f(0.0f, -10.0f,-5.0f); // ending point of the line
+    glEnd( );
+    glBegin(GL_LINES);
+    glVertex3f(10.0f, 0.0f, -5.0f); // origin of the line
+    glVertex3f(-10.0f, 0.0f,-5.0f); // ending point of the line
+    glEnd( );
+    glBegin(GL_LINES);
+	glColor3f (1.0, 0.0, 0.0);    
+	glVertex3f(x[0]*0.2f, y[0]*0.2f, -5.0f); // origin of the line
+    glVertex3f(x[1]*0.2f,y[1]* 0.2f,-5.0f); // ending point of the line
+    glEnd();
+    }
+
+
+//Called when a key is pressed
+void handleKeypress(unsigned char key, //The key that was pressed
+					int x, int y) {    //The current mouse coordinates
+	switch (key) {
+		case 27: //Escape key
+			exit(0); //Exit the program
+	}
+}
+
+//Initializes 3D rendering
+void initRendering() {
+	//Makes 3D drawing work when something is in front of something else
+	glEnable(GL_DEPTH_TEST);
+}
+
+//Called when the window is resized
+void handleResize(int w, int h) {
+	glViewport(0, 0, w, h);
+	glMatrixMode(GL_PROJECTION); //Switch to setting the camera perspective
+	glLoadIdentity(); //Reset the camera
+	gluPerspective(45.0,                  //The camera angle
+				   (double)w / (double)h, //The width-to-height ratio
+				   1.0,                   //The near z clipping coordinate
+				   200.0);                //The far z clipping coordinate
+}
+
+
+void translation() {
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glColor3f (0.0, 1.0, 0.0);
+	drawaxis();glColor3f (0.0, 1.0, 0.0);
+    int t[3][3]={{1,0,tx},{0,1,ty},{0,0,1}},p[3],po[3][2];
+	for(int k=0;k<2;k++)
+	{
+	    p[0]=x[k];
+        p[1]=y[k];
+        p[2]=1;
+        for(int i=0;i<3;i++)
+        {
+            int sum=0;
+            for(int j=0;j<3;j++)
+            sum+=t[i][j]*p[j];
+            po[i][k]=sum;
+            }
+	    }
+
+
+
+
+    glBegin(GL_LINES);
+    glVertex3f(po[0][0]*0.2f, po[1][0]*0.2f, -5.0f); // origin of the line
+    glVertex3f(po[0][1]*0.2f,po[1][1]* 0.2f,-5.0f); // ending point of the line
+    glEnd( );
+
+    glutSwapBuffers(); //Send the 3D scene to the screen
+}
+
+void rotation() {
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glColor3f (0.0, 1.0, 0.0);
+    drawaxis();glColor3f (0.0, 1.0, 0.0);
+	double r[3][3]={{cos(theta*3.14/180),-sin(theta*3.14/180),0},{sin(theta*3.14/180),cos(theta*3.14/180),0},{0,0,1}},p[3],po[3][2];
+	for(int k=0;k<2;k++)
+	{
+	    p[0]=x[k];
+        p[1]=y[k];
+        p[2]=1;
+        for(int i=0;i<3;i++)
+        {
+            double sum=0;
+            for(int j=0;j<3;j++)
+            sum+=r[i][j]*p[j];
+            po[i][k]=sum;
+            }
+	    }
+    glBegin(GL_LINES);
+    glVertex3f(po[0][0]*0.2f, po[1][0]*0.2f, -5.0f); // origin of the line
+    glVertex3f(po[0][1]*0.2f,po[1][1]* 0.2f,-5.0f); // ending point of the line
+    glEnd( );
+
+    glutSwapBuffers(); //Send the 3D scene to the screen
+}
+
+void scaling() {
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glColor3f (0.0, 1.0, 0.0);
+    drawaxis();
+	int s[3][3]={{sx,0,0},{0,sy,0},{0,0,1}},p[3],po[3][2];
+	for(int k=0;k<2;k++)
+	{
+	    p[0]=x[k];
+        p[1]=y[k];
+        p[2]=1;
+        for(int i=0;i<3;i++)
+        {
+            int sum=0;
+            for(int j=0;j<3;j++)
+            sum+=s[i][j]*p[j];
+            po[i][k]=sum;
+            }
+	    }
+
+
+
+
+    glBegin(GL_LINES);
+    glVertex3f(po[0][0]*0.2f, po[1][0]*0.2f, -5.0f); // origin of the line
+    glVertex3f(po[0][1]*0.2f,po[1][1]* 0.2f,-5.0f); // ending point of the line
+    glEnd( );
+
+    glutSwapBuffers(); //Send the 3D scene to the screen
+}
+
+void shearing() {
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glColor3f (0.0, 1.0, 0.0);
+    drawaxis();
+	int s[3][3]={{1,shx,0},{shy,1,0},{0,0,1}},p[3],po[3][2];
+	for(int k=0;k<2;k++)
+	{
+	    p[0]=x[k];
+        p[1]=y[k];
+        p[2]=1;
+        for(int i=0;i<3;i++)
+        {
+            int sum=0;
+            for(int j=0;j<3;j++)
+            sum+=s[i][j]*p[j];
+            po[i][k]=sum;
+            }
+	    }
+    glBegin(GL_LINES);
+    glVertex3f(po[0][0]*0.2f, po[1][0]*0.2f, -5.0f); // origin of the line
+    glVertex3f(po[0][1]*0.2f,po[1][1]* 0.2f,-5.0f); // ending point of the line
+    glEnd( );
+    glutSwapBuffers(); //Send the 3D scene to the screen
+}
+void reflection(){
+glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glColor3f (0.0, 1.0, 0.0);
+    drawaxis();
+	int s[3][3]={{rx*1,0,0},{0,ry*1,0},{0,0,1}},p[3],po[3][2];
+	for(int k=0;k<2;k++)
+	{
+	    p[0]=x[k];
+        p[1]=y[k];
+        p[2]=1;
+        for(int i=0;i<3;i++)
+        {
+            int sum=0;
+            for(int j=0;j<3;j++)
+            sum+=s[i][j]*p[j];
+            po[i][k]=sum;
+            }
+	    }
+    glBegin(GL_LINES);
+    glVertex3f(po[0][0]*0.2f, po[1][0]*0.2f, -5.0f); // origin of the line
+    glVertex3f(po[0][1]*0.2f,po[1][1]* 0.2f,-5.0f); // ending point of the line
+    glEnd( );
+    glutSwapBuffers(); //Send the 3D scene to the screen
+
+
+}
+void rotate_point() {
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glColor3f (0.0, 1.0, 0.0);
+	drawaxis();
+	double t2[3][3]={{1,0,-rx},{0,1,-ry},{0,0,1}},p2[3],po2[3][2];
+	for(int k=0;k<2;k++)
+	{
+	    p2[0]=x[k];
+        p2[1]=x[k];
+        p2[2]=1;
+        for(int i=0;i<3;i++)
+        {
+            int sum=0;
+            for(int j=0;j<3;j++)
+            sum+=t2[i][j]*p2[j];
+            po2[i][k]=sum;
+            }
+	    }
+
+
+	double r[3][3]={{cos(rtheta*3.14/180),-sin(rtheta*3.14/180),0},{sin(rtheta*3.14/180),cos(rtheta*3.14/180),0},{0,0,1}},p1[3],po1[3][2];
+	for(int k=0;k<2;k++)
+	{
+	    p1[0]=po2[0][k];
+        p1[1]=po2[1][k];
+        p1[2]=po2[2][k];
+        for(int i=0;i<3;i++)
+        {
+            double sum=0;
+            for(int j=0;j<3;j++)
+            sum+=r[i][j]*p1[j];
+            po1[i][k]=sum;
+            }
+	    }
+    double t[3][3]={{1,0,rx},{0,1,ry},{0,0,1}},p[3],po[3][2];
+    for(int k=0;k<2;k++)
+	{
+	    p[0]=po1[0][k];
+        p[1]=po1[1][k];
+        p[2]=1;
+        for(int i=0;i<3;i++)
+        {
+            int sum=0;
+            for(int j=0;j<3;j++)
+            sum+=t[i][j]*p[j];
+            po[i][k]=sum;
+            }
+	    }
+
+    glBegin(GL_LINES);
+    glVertex3f(po[0][0]*0.2f, po[1][0]*0.2f, -5.0f); // origin of the line
+    glVertex3f(po[0][1]*0.2f,po[1][1]* 0.2f,-5.0f); // ending point of the line
+    glEnd( );
+
+    glutSwapBuffers();
+}
+void dis(){
+glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glColor3f (0.0, 1.0, 0.0);
+	drawaxis();
+	glBegin(GL_LINES);
+    glVertex3f(x[0]*0.2f, y[0]*0.2f, -5.0f); // origin of the line
+    glVertex3f(x[1]*0.2f,y[1]* 0.2f,-5.0f); // ending point of the line
+    glEnd( );
+    glutSwapBuffers();
+}
+
+int main(int argc, char** argv) {
+    cout<<"Enter co-ordinates of line:"<<endl
+    <<"x1 y1:"<<endl;
+    cin>>x[0]>>y[0];
+    cout<<"x2 y2:"<<endl;
+    cin>>x[1]>>y[1];
+
+
+	//Initialize GLUT
+	glutInit(&argc, argv);
+	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
+	glutInitWindowSize(600, 600); //Set the window size
+
+	//Create the window
+	glutCreateWindow("Graphics Lab");
+	initRendering(); //Initialize rendering
+while(1){
+    cout<<"Select:"<<endl<<endl
+    <<"1- Translation"<<endl
+    <<"2- Rotation"<<endl
+    <<"3- Scaling"<<endl
+    <<"4- Shearing"<<endl
+    <<"5- Reflection:"<<endl;
+
+    cin>>n;
+
+	//Set handler functions for drawing, keypresses, and window resizes
+	switch(n)
+	{
+	    case 1:
+        cout<<"Enter translation value"<<endl;
+        cin>>tx>>ty;
+        glutDisplayFunc(translation);
+	    break;
+	    case 2:
+	    cout<<"Enter value of theta:"<<endl;
+	    cin>>theta;
+	    glutDisplayFunc(rotation);
+	    break;
+	    case 3:
+	    cout<<"Enter value of sx and sy:"<<endl;
+	    cin>>sx>>sy;
+	    glutDisplayFunc(scaling);
+	    break;
+	    case 4:
+	    cout<<"Enter value of shx and shy:"<<endl;
+	    cin>>shx>>shy;
+	    glutDisplayFunc(shearing);
+	    break;
+	    case 5:
+
+	    cout<<"Reflection about \n1.x-axis\n2.y-axis\n3.origin"<<endl;
+          cin>>q;
+switch(q){case 1:rx=1;ry=-1;break; case 2: rx=-1;ry=1;break; case 3: rx=-1;ry=-1;}	    
+glutDisplayFunc(reflection);
+	    break;
+	    default:
+	    cout<<"wrong choice"<<endl<<"exiting...";
+	    exit(0);
+	    break;
+	    }
+}
+
+	glutKeyboardFunc(handleKeypress);
+	glutReshapeFunc(handleResize);
+
+	glutMainLoop(); //Start the main loop.  glutMainLoop doesn't return.
+	return 0; //This line is never reached
+}
+
+
+
+
+
+
+
+
+
