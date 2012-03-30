@@ -1,0 +1,26 @@
+
+RUNNING ON LINUX
+================
+Here the several folders contain the seperate minor projects.
+Each folder contains the source code as well as the executable binary file.
+For Example the folder project contains the source code project.cpp as well as the executable file project.
+The folder lib does not contain any project but header files required in several projects.
+Suppose this graphics folder is located in your path FOLDER then 
+for running a project say bezier_curve type in command-line
+$ cd FOLDER/bezier_curve
+$ ./bezier
+
+and the program should run.
+If it quotes the error in loading shared library it may be due to the fact that your machine is running some different version
+of OpenGL or any other cause.
+Try compliling it as follows.
+For example the bezier.cpp source file includes custom header files matrix.cpp and point.cpp which are located in the path FOLDER/lib.
+so you may compile it as
+$ g++ bezier.cpp ../lib/point.cpp ../lib/matrix.cpp -lglut -lGLU .
+This will generate an a.out file which can be rUn conveniently as 
+$ ./a.out
+
+The file inbezier serves as input for the bezier curve.
+You may modify it but may need to consider the constraints.
+ 
+ 
