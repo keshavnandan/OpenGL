@@ -37,16 +37,6 @@ void Draw(){
 	glPointSize(2);
 	glColor3f(1.0,0.0,0.0);
 
-/*	float P[8][3],P1[8][3],T[8][3];
-	P[0]={0.0,0.0,0.0};
-	P[1]={0.0,0.0,0.2};
-	P[2]={0.2,0.0,0.2};
-	P[3]={0.2,0.0,0.0};
-	P[4]={0.2,0.2,0.0};
-	P[5]={0.0,0.2,0.0};
-	P[6]={0.0,0.2,0.2};
-	P[7]={0.2,0.2,0.2};
-*/
 	float P1[8][3],T[8][3];	
 	float P[8][3] = { {0.0,0.0,0.0},
 	{0.0,0.0,0.2},
@@ -243,32 +233,6 @@ void Draw(){
 	glVertex3fv(T[7]);
 	glEnd();
 	glFlush();	
-/*
-	glColor3f(1.0,1.0,0.0);						
-	glBegin(GL_LINE_STRIP);
-	glVertex3fv(T[3]);
-	glVertex3fv(T[0]);
-	glVertex3fv(T[1]);
-	glColor3f(1.0,1.0,1.0);
-	glVertex3fv(T[2]);
-	glVertex3fv(T[3]);
-	glVertex3fv(T[4]);
-	glVertex3fv(T[5]);
-	glVertex3fv(T[6]);
-	glVertex3fv(T[7]);
-	glVertex3fv(T[4]);
-	glEnd();
-	glFlush();
-	glBegin(GL_LINES);
-	glVertex3fv(T[1]);
-	glVertex3fv(T[6]);
-	glVertex3fv(T[2]);
-	glVertex3fv(T[7]);
-	glColor3f(1.0,1.0,0.0);
-	glVertex3fv(T[0]);
-	glVertex3fv(T[5]);
-*/	glEnd();
-	glFlush();
 	glFinish();
 	glPopMatrix();
 	glutSwapBuffers();
