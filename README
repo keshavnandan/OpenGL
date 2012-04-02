@@ -1,10 +1,13 @@
 RUNNING ON LINUX
 ================
-Here the several folders contain the seperate minor projects.
+The programs here are tested on Ubuntu 11.10 running on a 64-bit machine.
+They might not work on a 32-bit machine and may qoute error which is something like cannot execute binary file.
+In that case try compiling the source code.
+Here the several folders contain the separate minor projects.
 Each folder contains the source code as well as the executable binary file.
-For Example the folder project contains the source code project.cpp as well as the executable file project.
+For example, the folder project contains the source code project.cpp as well as the executable file project.
 The folder lib does not contain any project but header files required in several projects.
-Suppose this graphics folder is located in your path FOLDER then 
+Suppose this OpenGL folder is located in your path FOLDER then 
 for running a project say bezier_curve type in command-line
 $ cd FOLDER/bezier_curve
 $ ./bezier
@@ -14,7 +17,7 @@ If it quotes the error in loading shared library it may be due to the fact that 
 of OpenGL or any other cause.
 Try compliling it as follows.
 For example the bezier.cpp source file includes custom header files matrix.cpp and point.cpp which are located in the path FOLDER/lib.
-so you may compile it as
+So you may compile it as
 $ g++ bezier.cpp ../lib/point.cpp ../lib/matrix.cpp -lglut -lGLU .
 This will generate an a.out file which can be run conveniently as 
 $ ./a.out
@@ -22,4 +25,8 @@ $ ./a.out
 The file inbezier serves as input for the bezier curve.
 You may modify it but may need to consider the constraints.
  
- 
+RUNNING ON WINDOWS
+==================
+
+The programs are not tested on Windows.
+However an inclusion of header file "windows.h" may be sufficient for succesful compilation and then the program should run.
